@@ -1,20 +1,15 @@
-chrome.action.onClicked.addListener((tab) => {
-    chrome.scripting.executeScript({
-        target: { tabId: tab.id },
-        function: performActions
-    });
-});
-
 function performActions() {
     console.log('Stopping spinner...');
-    stop(); // Wywołuje funkcję stop() w konsoli
+    if (typeof stop === 'function') {
+        stop(); // Wywołuje funkcję stop() w konsoli
+    } else {
+        console.log('Function stop() is not defined in the page context.');
+    }
 
-    // Flaga do zatrzymania wyszukiwania po 4 sekundach
     let stopSearching = false;
 
-    // Funkcja do kliknięcia przycisku wewnątrz dowolnego iframe
     function checkAndClickButtonInIframe() {
-        if (stopSearching) return; // Zatrzymujemy wyszukiwanie, jeśli minęło 4 sekundy
+        if (stopSearching) return;
 
         const iframes = document.getElementsByTagName('iframe');
 
@@ -25,21 +20,21 @@ function performActions() {
             if (button) {
                 button.click();
                 console.log("Button with id='button1' found and clicked inside iframe.");
-                return; // Kończymy działanie skryptu po znalezieniu i kliknięciu przycisku
+                return;
             }
         }
 
         console.log("Button with id='button1' not found inside any iframe. Retrying...");
-        // Jeśli przycisk jeszcze się nie pojawił, sprawdzaj co 500 ms
         setTimeout(checkAndClickButtonInIframe, 100);
     }
 
-    // Wywołanie sprawdzania po 1 sekundzie
     checkAndClickButtonInIframe();
 
-    // Zatrzymujemy wyszukiwanie po 4 sekundach
     setTimeout(() => {
         stopSearching = true;
         console.log("Stopped searching for the button after 4 seconds.");
     }, 4000);
 }
+
+// Uruchom funkcję performActions
+performActions();
