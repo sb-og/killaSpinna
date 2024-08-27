@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "killerSpinner",
+  "description": "By: Szymon Bogus",
+  "version": "1.0",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+  "action": {
+    "default_icon": "images/killer.png"
+  },
+  "background": {
+    "service_worker": "killer.js"
+  }
+}
